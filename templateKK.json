@@ -1,0 +1,121 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DataKeluarga",
+  "type": "object",
+  "required": ["kk", "alamatLengkap", "anggota"],
+  "properties": {
+    "kk": {
+      "type": "string",
+      "pattern": "^[0-9]{16}$",
+      "description": "Nomor Kartu Keluarga (16 digit)"
+    },
+    "alamatLengkap": {
+      "type": "object",
+      "required": [
+        "alamat",
+        "rt",
+        "rw",
+        "kelurahan",
+        "kecamatan",
+        "kabupaten",
+        "provinsi",
+        "kodePos"
+      ],
+      "properties": {
+        "alamat": { "type": "string" },
+        "rt": { "type": "string", "pattern": "^[0-9]{1,3}$" },
+        "rw": { "type": "string", "pattern": "^[0-9]{1,3}$" },
+        "kelurahan": { "type": "string" },
+        "kecamatan": { "type": "string" },
+        "kabupaten": { "type": "string" },
+        "provinsi": { "type": "string" },
+        "kodePos": { "type": "string", "pattern": "^[0-9]{5}$" }
+      }
+    },
+    "anggota": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "nik",
+          "nama",
+          "jenisKelamin",
+          "tempatLahir",
+          "tanggalLahir",
+          "agama",
+          "pendidikan",
+          "jenisPekerjaan",
+          "statusPernikahan",
+          "statusHubunganKeluarga",
+          "kewarganegaraan"
+        ],
+        "properties": {
+          "nik": {
+            "type": "string",
+            "pattern": "^[0-9]{16}$"
+          },
+          "nama": { "type": "string" },
+          "jenisKelamin": {
+            "type": "string",
+            "enum": ["L", "P"]
+          },
+          "tempatLahir": { "type": "string" },
+          "tanggalLahir": {
+            "type": "string",
+            "format": "date"
+          },
+          "agama": {
+            "type": "string",
+            "enum": [
+              "ISLAM",
+              "KRISTEN",
+              "KATOLIK",
+              "HINDU",
+              "BUDHA",
+              "KONGHUCU",
+              "LAINNYA"
+            ]
+          },
+          "pendidikan": { "type": "string" },
+          "jenisPekerjaan": { "type": "string" },
+          "statusPernikahan": {
+            "type": "string",
+            "enum": ["BELUM KAWIN", "KAWIN", "CERAI HIDUP", "CERAI MATI"]
+          },
+          "statusHubunganKeluarga": {
+            "type": "string",
+            "enum": [
+              "KEPALA KELUARGA",
+              "SUAMI",
+              "ISTRI",
+              "ANAK",
+              "FAMILI LAIN",
+              "LAINNYA"
+            ]
+          },
+          "kewarganegaraan": {
+            "type": "string",
+            "enum": ["WNI", "WNA"]
+          },
+          "wallet": {
+            "type": ["string", "null"],
+            "pattern": "^0x[a-fA-F0-9]{40}$"
+          }
+        }
+      }
+    },
+    "diunggahOleh": {
+      "type": "string",
+      "description": "NIP/NIK petugas pengunggah"
+    },
+    "waktuUpload": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "versi": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
+}
