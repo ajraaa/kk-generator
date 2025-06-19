@@ -1,4 +1,4 @@
-// Data referensi Indonesia
+// Data referensi Indonesia dengan nama-nama khas Yogyakarta
 const namaLaki = [
   "Ahmad Rizki",
   "Budi Santoso",
@@ -15,6 +15,16 @@ const namaLaki = [
   "Nur Hidayat",
   "Oki Permana",
   "Putra Mahardika",
+  "Rudi Hartono",
+  "Sigit Pramono",
+  "Toni Sukirno",
+  "Untung Surapati",
+  "Wahyu Nugroho",
+  "Yanto Wibowo",
+  "Agus Setiawan",
+  "Bambang Sutrisno",
+  "Cahyo Purnomo",
+  "Dwi Atmoko",
 ];
 
 const namaPerempuan = [
@@ -33,27 +43,37 @@ const namaPerempuan = [
   "Maya Safitri",
   "Nita Anggraini",
   "Oktavia Nur",
+  "Putri Rahayu",
+  "Ratna Sari",
+  "Siti Nurhaliza",
+  "Tri Wahyuni",
+  "Utin Puspitasari",
+  "Vera Wati",
+  "Winda Sari",
+  "Yuni Astuti",
+  "Zahra Aulia",
+  "Dewi Sartika",
 ];
 
 const tempatLahir = [
+  "Yogyakarta",
+  "Sleman",
+  "Bantul",
+  "Kulon Progo",
+  "Gunung Kidul",
   "Jakarta",
   "Surabaya",
   "Bandung",
   "Medan",
   "Semarang",
-  "Makassar",
-  "Palembang",
-  "Tangerang",
-  "Depok",
-  "Bekasi",
-  "Yogyakarta",
   "Solo",
-  "Malang",
-  "Bogor",
-  "Batam",
+  "Klaten",
+  "Purworejo",
+  "Magelang",
+  "Kebumen",
 ];
 
-const agama = ["ISLAM", "KRISTEN", "KATOLIK", "HINDU", "BUDHA", "KONGHUCU"];
+const agama = ["ISLAM", "KRISTEN", "KATOLIK", "HINDU", "BUDHA"];
 
 // Pendidikan berdasarkan level
 const pendidikanLevel = {
@@ -79,22 +99,15 @@ const pekerjaanByPendidikan = {
     "MENGURUS RUMAH TANGGA",
     "BURUH HARIAN LEPAS",
     "BURUH TANI/PERKEBUNAN",
-    "BURUH NELAYAN/PERIKANAN",
-    "BURUH PETERNAKAN",
     "PEMBANTU RUMAH TANGGA",
-    "TUKANG CUKUR",
     "TUKANG BATU",
     "TUKANG KAYU",
-    "TUKANG SOL SEPATU",
-    "TUKANG LAS/PANDAI BESI",
     "TUKANG JAHIT",
-    "PENATA RAMBUT",
     "MEKANIK",
     "JURU MASAK",
     "PEDAGANG",
     "SOPIR",
     "PETANI/PEKEBUN",
-    "NELAYAN/PERIKANAN",
     "PERANGKAT DESA",
   ],
   MENENGAH: [
@@ -106,10 +119,10 @@ const pekerjaanByPendidikan = {
     "PERDAGANGAN",
     "SENIMAN",
     "WARTAWAN",
-    "PELAUT",
-    "PIALANG",
     "WIRASWASTA",
-    "PENYIAR RADIO",
+    "OJEK ONLINE",
+    "DRIVER",
+    "SALES",
   ],
   TINGGI: [
     "PEGAWAI NEGERI SIPIL",
@@ -119,9 +132,7 @@ const pekerjaanByPendidikan = {
     "KARYAWAN BUMD",
     "DOSEN",
     "GURU",
-    "PILOT",
     "PENGACARA",
-    "NOTARIS",
     "ARSITEK",
     "AKUNTAN",
     "KONSULTAN",
@@ -129,93 +140,70 @@ const pekerjaanByPendidikan = {
     "BIDAN",
     "PERAWAT",
     "APOTEKER",
-    "PSIKIATER/PSIKOLOG",
-    "PENYIAR TELEVISI",
     "PENELITI",
-    "ANGGOTA DPRD PROVINSI",
-    "ANGGOTA DPRD KABUPATEN/KOTA",
-    "ANGGOTA DPR-RI",
-    "ANGGOTA DPD",
-    "ANGGOTA BPK",
-    "ANGGOTA MAHKAMAH KONSTITUSI",
-    "ANGGOTA KABINET/KEMENTERIAN",
-    "DUTA BESAR",
-    "GUBERNUR",
-    "WAKIL GUBERNUR",
-    "BUPATI",
-    "WAKIL BUPATI",
-    "WALIKOTA",
-    "WAKIL WALIKOTA",
-    "KEPALA DESA",
   ],
 };
 
-const wilayahData = {
-  "DKI JAKARTA": {
-    kabupaten: [
-      "JAKARTA PUSAT",
-      "JAKARTA UTARA",
-      "JAKARTA BARAT",
-      "JAKARTA SELATAN",
-      "JAKARTA TIMUR",
-      "KEPULAUAN SERIBU",
+// Data spesifik Ambarketawang dengan 5 dusun
+const dusunData = {
+  BODEH: {
+    maxRW: 5,
+    maxRT: 8,
+    jalan: [
+      "Jl. Bodeh Raya",
+      "Jl. Bodeh Timur",
+      "Jl. Bodeh Barat",
+      "Jl. Bodeh Utara",
+      "Jl. Bodeh Tengah",
     ],
-    kecamatan: [
-      "GAMBIR",
-      "SAWAH BESAR",
-      "KEMAYORAN",
-      "SENEN",
-      "CEMPAKA PUTIH",
-      "MENTENG",
-      "TANAH ABANG",
-      "JOHAR BARU",
-    ],
-    kelurahan: [
-      "GAMBIR",
-      "CIDENG",
-      "PETOJO UTARA",
-      "PETOJO SELATAN",
-      "KEBON KELAPA",
-      "DURI PULO",
-      "KARTINI",
-      "GUNUNG SAHARI UTARA",
-    ],
-    kodePosRange: [10110, 14490],
   },
-  "JAWA BARAT": {
-    kabupaten: [
-      "BANDUNG",
-      "BOGOR",
-      "BEKASI",
-      "DEPOK",
-      "CIMAHI",
-      "SUKABUMI",
-      "TASIKMALAYA",
-      "KARAWANG",
+  DEPOK: {
+    maxRW: 3,
+    maxRT: 7,
+    jalan: [
+      "Jl. Depok Raya",
+      "Jl. Depok Indah",
+      "Jl. Depok Makmur",
+      "Jl. Depok Sejahtera",
+      "Jl. Depok Asri",
     ],
-    kecamatan: [
-      "BANDUNG KOTA",
-      "COBLONG",
-      "SUKASARI",
-      "CIDADAP",
-      "CICENDO",
-      "SUKAJADI",
-      "ANDIR",
-      "ASTANA ANYAR",
+  },
+  PATUKAN: {
+    maxRW: 4,
+    maxRT: 9,
+    jalan: [
+      "Jl. Patukan Raya",
+      "Jl. Patukan Timur",
+      "Jl. Patukan Barat",
+      "Jl. Patukan Tengah",
+      "Jl. Patukan Indah",
     ],
-    kelurahan: [
-      "LEBAK GEDE",
-      "CIPAGANTI",
-      "SUKAGALIH",
-      "SUKAWARNA",
-      "SEKELOA",
-      "GEGER KALONG",
-      "ISOLA",
-      "SARIJADI",
+  },
+  "GAMPING KIDUL": {
+    maxRW: 5,
+    maxRT: 14,
+    jalan: [
+      "Jl. Gamping Kidul Raya",
+      "Jl. Gamping Kidul Timur",
+      "Jl. Gamping Kidul Barat",
+      "Jl. Gamping Kidul Tengah",
+      "Jl. Gamping Kidul Indah",
     ],
-    kodePosRange: [16110, 17730],
+  },
+  "MEJING LOR": {
+    maxRW: 5,
+    maxRT: 15,
+    jalan: [
+      "Jl. Mejing Lor Raya",
+      "Jl. Mejing Lor Timur",
+      "Jl. Mejing Lor Barat",
+      "Jl. Mejing Lor Tengah",
+      "Jl. Mejing Lor Indah",
+    ],
   },
 };
+
+const dusunNames = Object.keys(dusunData);
 
 function getRandomElement(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -246,32 +234,24 @@ function generateRandomDate(startYear, endYear) {
   return date.toISOString().split("T")[0];
 }
 
-function generateAlamat(provinsi) {
-  const wilayah = wilayahData[provinsi] || wilayahData["DKI JAKARTA"];
-  const jalan = [
-    "Jl. Merdeka",
-    "Jl. Sudirman",
-    "Jl. Thamrin",
-    "Jl. Gatot Subroto",
-    "Jl. Ahmad Yani",
-    "Jl. Diponegoro",
-    "Jl. Imam Bonjol",
-    "Jl. Veteran",
-    "Jl. Pemuda",
-    "Jl. Pahlawan",
-  ];
+function generateAlamat(specificDusun = null) {
+  const selectedDusun = specificDusun || getRandomElement(dusunNames);
+  const dusunInfo = dusunData[selectedDusun];
+
+  const selectedJalan = getRandomElement(dusunInfo.jalan);
+  const rt = String(getRandomNumber(1, dusunInfo.maxRT)).padStart(3, "0");
+  const rw = String(getRandomNumber(1, dusunInfo.maxRW)).padStart(3, "0");
 
   return {
-    alamat: `${getRandomElement(jalan)} No. ${getRandomNumber(1, 200)}`,
-    rt: String(getRandomNumber(1, 30)).padStart(3, "0"),
-    rw: String(getRandomNumber(1, 15)).padStart(3, "0"),
-    kelurahan: getRandomElement(wilayah.kelurahan),
-    kecamatan: getRandomElement(wilayah.kecamatan),
-    kabupaten: getRandomElement(wilayah.kabupaten),
-    provinsi: provinsi,
-    kodePos: String(
-      getRandomNumber(wilayah.kodePosRange[0], wilayah.kodePosRange[1])
-    ),
+    alamat: `${selectedJalan} No. ${getRandomNumber(1, 150)}`,
+    rt: rt,
+    rw: rw,
+    dusun: selectedDusun,
+    kelurahan: "AMBARKETAWANG",
+    kecamatan: "GAMPING",
+    kabupaten: "SLEMAN",
+    provinsi: "DAERAH ISTIMEWA YOGYAKARTA",
+    kodePos: "55294", // Kode pos Gamping, Sleman
   };
 }
 
@@ -282,9 +262,9 @@ function getPendidikanByAge(umur) {
   if (umur < 16) return "SLTP/SEDERAJAT";
   if (umur < 19) return "SLTA/SEDERAJAT";
 
-  // Untuk dewasa, distribusi berdasarkan probabilitas
+  // Untuk dewasa, distribusi berdasarkan probabilitas (wilayah urban Yogyakarta)
   const rand = Math.random();
-  if (rand < 0.4) return getRandomElement(pendidikanLevel.MENENGAH);
+  if (rand < 0.3) return getRandomElement(pendidikanLevel.MENENGAH);
   if (rand < 0.8) return getRandomElement(pendidikanLevel.TINGGI.slice(0, 3)); // Diploma sampai S1
   return getRandomElement(pendidikanLevel.TINGGI); // Termasuk S2, S3
 }
@@ -343,18 +323,18 @@ function generateFamilyMember(
     pendidikan: pendidikanLevel,
     jenisPekerjaan: pekerjaanLevel,
     umur: umur,
-    kewarganegaraan: Math.random() > 0.95 ? "WNA" : "WNI",
+    kewarganegaraan: Math.random() > 0.98 ? "WNA" : "WNI", // Lebih sedikit WNA di wilayah rural
   };
 }
 
-function generateFamily(provinsi, maxMembers) {
+function generateFamily(specificDusun = null, maxMembers = 6) {
   const kk = generateKK();
-  const alamat = generateAlamat(provinsi);
+  const alamat = generateAlamat(specificDusun);
   const memberCount = getRandomNumber(2, maxMembers);
   const anggota = [];
 
-  // Tentukan agama keluarga
-  const familyAgama = getRandomElement(agama);
+  // Tentukan agama keluarga (mayoritas Islam di Yogyakarta)
+  const familyAgama = Math.random() < 0.85 ? "ISLAM" : getRandomElement(agama);
 
   // Generate kepala keluarga (selalu laki-laki)
   const kepalaKeluarga = generateFamilyMember(familyAgama, true, "L");
@@ -372,13 +352,11 @@ function generateFamily(provinsi, maxMembers) {
   anggota.push(kepalaKeluarga);
 
   // Generate istri jika kepala keluarga kawin
-  let hasIstri = false;
   if (statusKepala === "KAWIN" && memberCount > 1) {
     const istri = generateFamilyMember(familyAgama, false, "P", true);
     istri.statusPernikahan = "KAWIN";
     istri.statusHubunganKeluarga = "ISTRI";
     anggota.push(istri);
-    hasIstri = true;
   }
 
   // Generate anggota keluarga lainnya
@@ -430,6 +408,7 @@ function convertToFlatStructure(families) {
     family.anggota.forEach((member) => {
       flatData.push({
         "No KK": family.kk,
+        Dusun: family.alamatLengkap.dusun,
         Alamat: family.alamatLengkap.alamat,
         RT: family.alamatLengkap.rt,
         RW: family.alamatLengkap.rw,
@@ -487,7 +466,7 @@ function createPreviewTable(data) {
 function exportToExcel(data, filename) {
   const ws = XLSX.utils.json_to_sheet(data);
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Data Keluarga");
+  XLSX.utils.book_append_sheet(wb, ws, "Data Keluarga Ambarketawang");
 
   // Auto-fit columns
   const colWidths = [];
@@ -505,6 +484,34 @@ function exportToExcel(data, filename) {
   XLSX.writeFile(wb, `${filename}.xlsx`);
 }
 
+function getDusunStats(data) {
+  const stats = {};
+  data.forEach((row) => {
+    const dusun = row["Dusun"];
+    if (!stats[dusun]) {
+      stats[dusun] = {
+        keluarga: new Set(),
+        anggota: 0,
+        rw: new Set(),
+        rt: new Set(),
+      };
+    }
+    stats[dusun].keluarga.add(row["No KK"]);
+    stats[dusun].anggota++;
+    stats[dusun].rw.add(row["RW"]);
+    stats[dusun].rt.add(row["RT"]);
+  });
+
+  // Convert Sets to counts
+  Object.keys(stats).forEach((dusun) => {
+    stats[dusun].keluarga = stats[dusun].keluarga.size;
+    stats[dusun].rw = stats[dusun].rw.size;
+    stats[dusun].rt = stats[dusun].rt.size;
+  });
+
+  return stats;
+}
+
 document.getElementById("dataForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
@@ -512,13 +519,14 @@ document.getElementById("dataForm").addEventListener("submit", function (e) {
   const avgMemberCount = parseInt(
     document.getElementById("avgMemberCount").value
   );
-  const provinsi = document.getElementById("provinsi").value;
-  const fileName = document.getElementById("fileName").value || "data_keluarga";
+  const specificDusun = document.getElementById("dusun").value || null;
+  const fileName =
+    document.getElementById("fileName").value || "data_keluarga_ambarketawang";
 
   // Generate families
   const families = [];
   for (let i = 0; i < familyCount; i++) {
-    families.push(generateFamily(provinsi, avgMemberCount));
+    families.push(generateFamily(specificDusun, avgMemberCount));
   }
 
   // Convert to flat structure for Excel
@@ -532,13 +540,33 @@ document.getElementById("dataForm").addEventListener("submit", function (e) {
   // Export to Excel
   exportToExcel(flatData, fileName);
 
-  // Show summary
+  // Get statistics
+  const stats = getDusunStats(flatData);
   const totalMembers = flatData.length;
-  alert(
-    `✅ Data berhasil digenerate!\n\n📊 Summary:\n- ${familyCount} Keluarga\n- ${totalMembers} Total Anggota\n- Rata-rata ${Math.round(
-      totalMembers / familyCount
-    )} anggota per keluarga\n\nFile Excel telah didownload!`
-  );
+
+  // Create detailed summary
+  let summaryText = `✅ Data berhasil digenerate!\n\n📊 RINGKASAN LENGKAP:\n`;
+  summaryText += `📍 Lokasi: Kelurahan Ambarketawang, Kecamatan Gamping, Kabupaten Sleman, DIY\n\n`;
+  summaryText += `📈 STATISTIK UMUM:\n`;
+  summaryText += `• Total Keluarga: ${familyCount}\n`;
+  summaryText += `• Total Anggota: ${totalMembers}\n`;
+  summaryText += `• Rata-rata Anggota per Keluarga: ${
+    Math.round((totalMembers / familyCount) * 10) / 10
+  }\n\n`;
+
+  summaryText += `🏘️ DISTRIBUSI PER DUSUN:\n`;
+  Object.keys(stats).forEach((dusun) => {
+    const stat = stats[dusun];
+    summaryText += `• ${dusun}:\n`;
+    summaryText += `  - ${stat.keluarga} Keluarga\n`;
+    summaryText += `  - ${stat.anggota} Anggota\n`;
+    summaryText += `  - ${stat.rw} RW aktif\n`;
+    summaryText += `  - ${stat.rt} RT aktif\n\n`;
+  });
+
+  summaryText += `💾 File Excel "${fileName}.xlsx" telah didownload!`;
+
+  alert(summaryText);
 
   // Scroll to preview
   document.getElementById("preview").scrollIntoView({ behavior: "smooth" });

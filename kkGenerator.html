@@ -4,21 +4,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator Data Keluarga Excel</title>
+    <title>Generator Data Keluarga Ambarketawang Excel</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
     <div class="container">
-        <h1>📊 Generator Data Keluarga Excel</h1>
+        <h1>📊 Generator Data Keluarga Ambarketawang</h1>
+
+        <div class="location-info">
+            <h3>📍 Wilayah Target Penelitian</h3>
+            <p><strong>Kelurahan:</strong> Ambarketawang, Kecamatan Gamping, Kabupaten Sleman, D.I. Yogyakarta</p>
+
+            <div class="dusun-list">
+                <div class="dusun-item">
+                    <strong>Dusun Bodeh</strong><br>
+                    5 RW / 8 RT
+                </div>
+                <div class="dusun-item">
+                    <strong>Dusun Depok</strong><br>
+                    3 RW / 7 RT
+                </div>
+                <div class="dusun-item">
+                    <strong>Dusun Patukan</strong><br>
+                    4 RW / 9 RT
+                </div>
+                <div class="dusun-item">
+                    <strong>Dusun Gamping Kidul</strong><br>
+                    5 RW / 14 RT
+                </div>
+                <div class="dusun-item">
+                    <strong>Dusun Mejing Lor</strong><br>
+                    5 RW / 15 RT
+                </div>
+            </div>
+        </div>
 
         <div class="schema-info">
             <h3>📋 Format Data Keluarga (Sesuai Schema JSON)</h3>
             <ul>
                 <li><strong>Nomor KK:</strong> 16 digit angka</li>
-                <li><strong>Alamat Lengkap:</strong> Jalan, RT, RW, Kelurahan, Kecamatan, Kabupaten, Provinsi, Kode Pos
-                </li>
+                <li><strong>Alamat Lengkap:</strong> Spesifik untuk 5 dusun di Ambarketawang dengan RT/RW realistis</li>
                 <li><strong>Data Anggota:</strong> NIK (16 digit), Nama, Jenis Kelamin, Tempat/Tanggal Lahir, Agama,
                     Pendidikan, Pekerjaan, Status Pernikahan, Hubungan Keluarga, Kewarganegaraan</li>
                 <li><strong>Logika Bisnis:</strong> Agama keluarga 90% sama, Pendidikan & Pekerjaan logis, Status
@@ -28,14 +55,16 @@
 
         <div class="format-note">
             ⚠️ <strong>Catatan:</strong> Data yang dihasilkan akan diformat dalam struktur flat untuk Excel, dengan satu
-            baris per anggota keluarga dan kolom alamat yang diulang untuk setiap anggota.
+            baris per anggota keluarga dan kolom alamat yang diulang untuk setiap anggota. Data disesuaikan dengan
+            kondisi
+            demografis wilayah Ambarketawang, Gamping, Sleman, DIY.
         </div>
 
         <form id="dataForm">
             <div class="row">
                 <div class="form-group">
                     <label for="familyCount">Jumlah Keluarga:</label>
-                    <input type="number" id="familyCount" min="1" max="100" value="10" required>
+                    <input type="number" id="familyCount" min="1" max="200" value="25" required>
                 </div>
 
                 <div class="form-group">
@@ -51,25 +80,25 @@
 
             <div class="row">
                 <div class="form-group">
-                    <label for="provinsi">Provinsi:</label>
-                    <select id="provinsi">
-                        <option value="DKI JAKARTA">DKI Jakarta</option>
-                        <option value="JAWA BARAT">Jawa Barat</option>
-                        <option value="JAWA TENGAH">Jawa Tengah</option>
-                        <option value="JAWA TIMUR">Jawa Timur</option>
-                        <option value="SUMATERA UTARA">Sumatera Utara</option>
-                        <option value="BALI">Bali</option>
-                        <option value="SULAWESI SELATAN">Sulawesi Selatan</option>
+                    <label for="dusun">Pilih Dusun (Opsional - Kosongkan untuk Random):</label>
+                    <select id="dusun">
+                        <option value="">Semua Dusun (Random)</option>
+                        <option value="BODEH">Dusun Bodeh (5 RW / 8 RT)</option>
+                        <option value="DEPOK">Dusun Depok (3 RW / 7 RT)</option>
+                        <option value="PATUKAN">Dusun Patukan (4 RW / 9 RT)</option>
+                        <option value="GAMPING KIDUL">Dusun Gamping Kidul (5 RW / 14 RT)</option>
+                        <option value="MEJING LOR">Dusun Mejing Lor (5 RW / 15 RT)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="fileName">Nama File:</label>
-                    <input type="text" id="fileName" value="data_keluarga" placeholder="data_keluarga">
+                    <input type="text" id="fileName" value="data_keluarga_ambarketawang"
+                        placeholder="data_keluarga_ambarketawang">
                 </div>
             </div>
 
-            <button type="submit" class="btn">🚀 Generate Data Keluarga Excel</button>
+            <button type="submit" class="btn">🚀 Generate Data Keluarga Ambarketawang</button>
         </form>
 
         <div id="preview" class="preview" style="display: none;">
