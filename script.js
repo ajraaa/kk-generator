@@ -213,6 +213,31 @@ function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Fungsi untuk distribusi normal (Box-Muller transform)
+function randomNormal(mean, stdDev) {
+  let u = 0,
+    v = 0;
+  while (u === 0) u = Math.random(); // Converting [0,1) to (0,1)
+  while (v === 0) v = Math.random();
+
+  const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  return Math.max(25, Math.min(75, Math.round(z * stdDev + mean)));
+}
+
+// Fungsi untuk menentukan berdasarkan probabilitas
+function getByProbability(options) {
+  const rand = Math.random();
+  let cumulativeProb = 0;
+
+  for (let option of options) {
+    cumulativeProb += option.probability;
+    if (rand <= cumulativeProb) {
+      return option.value;
+    }
+  }
+  return options[options.length - 1].value;
+}
+
 function generateNIK() {
   return Array.from({ length: 16 }, () => Math.floor(Math.random() * 10)).join(
     ""
@@ -251,7 +276,7 @@ function generateAlamat(specificDusun = null) {
     kecamatan: "GAMPING",
     kabupaten: "SLEMAN",
     provinsi: "DAERAH ISTIMEWA YOGYAKARTA",
-    kodePos: "55294", // Kode pos Gamping, Sleman
+    kodePos: "55294",
   };
 }
 
@@ -265,15 +290,25 @@ function getPendidikanByAge(umur) {
   // Untuk dewasa, distribusi berdasarkan probabilitas (wilayah urban Yogyakarta)
   const rand = Math.random();
   if (rand < 0.3) return getRandomElement(pendidikanLevel.MENENGAH);
-  if (rand < 0.8) return getRandomElement(pendidikanLevel.TINGGI.slice(0, 3)); // Diploma sampai S1
-  return getRandomElement(pendidikanLevel.TINGGI); // Termasuk S2, S3
+  if (rand < 0.8) return getRandomElement(pendidikanLevel.TINGGI.slice(0, 3));
+  return getRandomElement(pendidikanLevel.TINGGI);
 }
 
-function getPekerjaanByEducationAndAge(pendidikan, umur) {
+function getPekerjaanByEducationAndAge(pendidikan, umur, jenisKelamin) {
   if (umur < 5) return "BELUM/TIDAK BEKERJA";
   if (umur < 18) return "PELAJAR/MAHASISWA";
   if (umur > 65)
     return Math.random() > 0.3 ? "PENSIUNAN" : "BELUM/TIDAK BEKERJA";
+
+  // Untuk perempuan, ada kemungkinan mengurus rumah tangga
+  if (
+    jenisKelamin === "P" &&
+    umur >= 20 &&
+    umur <= 55 &&
+    Math.random() < 0.25
+  ) {
+    return "MENGURUS RUMAH TANGGA";
+  }
 
   // Tentukan level pendidikan
   let levelPendidikan = "RENDAH";
@@ -284,109 +319,203 @@ function getPekerjaanByEducationAndAge(pendidikan, umur) {
   return getRandomElement(pekerjaanByPendidikan[levelPendidikan]);
 }
 
-function generateFamilyMember(
-  familyAgama,
-  isKepala = false,
-  jenisKelamin = null,
-  isIstri = false
-) {
-  const jk = jenisKelamin || (Math.random() > 0.5 ? "L" : "P");
+function generateBasicMember(familyAgama, jenisKelamin, umur) {
   const nama =
-    jk === "L" ? getRandomElement(namaLaki) : getRandomElement(namaPerempuan);
-  const umur = isKepala
-    ? getRandomNumber(25, 65)
-    : isIstri
-    ? getRandomNumber(20, 60)
-    : getRandomNumber(0, 80);
+    jenisKelamin === "L"
+      ? getRandomElement(namaLaki)
+      : getRandomElement(namaPerempuan);
   const currentYear = new Date().getFullYear();
   const tahunLahir = currentYear - umur;
 
   // Agama: 90% sama dengan keluarga, 10% beda
   let agamaMember = familyAgama;
-  if (!isKepala && Math.random() < 0.1) {
+  if (Math.random() < 0.1) {
     agamaMember = getRandomElement(agama.filter((a) => a !== familyAgama));
   }
 
-  // Pendidikan berdasarkan umur
   const pendidikanLevel = getPendidikanByAge(umur);
-
-  // Pekerjaan berdasarkan pendidikan dan umur
-  const pekerjaanLevel = getPekerjaanByEducationAndAge(pendidikanLevel, umur);
+  const pekerjaanLevel = getPekerjaanByEducationAndAge(
+    pendidikanLevel,
+    umur,
+    jenisKelamin
+  );
 
   return {
     nik: generateNIK(),
     nama: nama,
-    jenisKelamin: jk,
+    jenisKelamin: jenisKelamin,
     tempatLahir: getRandomElement(tempatLahir),
     tanggalLahir: generateRandomDate(tahunLahir, tahunLahir),
     agama: agamaMember,
     pendidikan: pendidikanLevel,
     jenisPekerjaan: pekerjaanLevel,
     umur: umur,
-    kewarganegaraan: Math.random() > 0.98 ? "WNA" : "WNI", // Lebih sedikit WNA di wilayah rural
+    kewarganegaraan: Math.random() > 0.98 ? "WNA" : "WNI",
   };
 }
 
-function generateFamily(specificDusun = null, maxMembers = 6) {
+function generateKepalaKeluarga(familyAgama) {
+  // 82% Laki-laki, 18% Perempuan
+  const jenisKelamin = Math.random() < 0.82 ? "L" : "P";
+
+  // Usia dengan distribusi normal, puncak di 45 tahun
+  const umur = randomNormal(45, 10);
+
+  const kepala = generateBasicMember(familyAgama, jenisKelamin, umur);
+  kepala.statusHubunganKeluarga = "KEPALA KELUARGA";
+
+  // Status pernikahan berdasarkan jenis kelamin
+  if (jenisKelamin === "L") {
+    // Laki-laki: 95% Kawin, 3% Cerai Mati, 2% Cerai Hidup
+    kepala.statusPernikahan = getByProbability([
+      { value: "KAWIN", probability: 0.95 },
+      { value: "CERAI MATI", probability: 0.03 },
+      { value: "CERAI HIDUP", probability: 0.02 },
+    ]);
+  } else {
+    // Perempuan: 65% Cerai Mati, 25% Cerai Hidup, 7% Kawin, 3% Belum Kawin
+    kepala.statusPernikahan = getByProbability([
+      { value: "CERAI MATI", probability: 0.65 },
+      { value: "CERAI HIDUP", probability: 0.25 },
+      { value: "KAWIN", probability: 0.07 },
+      { value: "BELUM KAWIN", probability: 0.03 },
+    ]);
+  }
+
+  return kepala;
+}
+
+function generatePasangan(kepala, familyAgama) {
+  if (kepala.statusPernikahan !== "KAWIN") return null;
+
+  // Jenis kelamin kebalikan dari KRT
+  const jenisKelamin = kepala.jenisKelamin === "L" ? "P" : "L";
+
+  // Usia +/- 0-5 tahun dari KRT
+  const selisihUmur = getRandomNumber(-5, 5);
+  const umur = Math.max(18, Math.min(80, kepala.umur + selisihUmur));
+
+  const pasangan = generateBasicMember(familyAgama, jenisKelamin, umur);
+  pasangan.statusPernikahan = "KAWIN";
+  pasangan.statusHubunganKeluarga = jenisKelamin === "P" ? "ISTRI" : "SUAMI";
+
+  return pasangan;
+}
+
+function generateAnak(kepala, familyAgama) {
+  const statusKawin = kepala.statusPernikahan;
+  if (!["KAWIN", "CERAI HIDUP", "CERAI MATI"].includes(statusKawin)) return [];
+
+  // Tentukan jumlah anak: 0 (20%), 1 (35%), 2 (35%), 3 (8%), 4+ (2%)
+  const jumlahAnak = getByProbability([
+    { value: 0, probability: 0.2 },
+    { value: 1, probability: 0.35 },
+    { value: 2, probability: 0.35 },
+    { value: 3, probability: 0.08 },
+    { value: 4, probability: 0.02 },
+  ]);
+
+  const anakList = [];
+
+  for (let i = 0; i < jumlahAnak; i++) {
+    // Usia anak harus (usia KRT) - (minimal 18 tahun)
+    const maxUmurAnak = kepala.umur - 18;
+    if (maxUmurAnak <= 0) continue; // Skip jika KRT terlalu muda
+
+    const umurAnak = getRandomNumber(0, maxUmurAnak);
+    const jenisKelamin = Math.random() < 0.5 ? "L" : "P";
+
+    const anak = generateBasicMember(familyAgama, jenisKelamin, umurAnak);
+    anak.statusHubunganKeluarga = "ANAK";
+
+    // Status pernikahan anak hampir selalu "Belum Kawin"
+    if (umurAnak < 17) {
+      anak.statusPernikahan = "BELUM KAWIN";
+    } else {
+      // Untuk anak dewasa, 5% kemungkinan sudah kawin
+      anak.statusPernikahan = Math.random() < 0.05 ? "KAWIN" : "BELUM KAWIN";
+    }
+
+    anakList.push(anak);
+  }
+
+  return anakList;
+}
+
+function generateAnggotaLain(familyAgama) {
+  const anggotaLain = [];
+
+  // 10% probabilitas memiliki anggota keluarga lain
+  if (Math.random() < 0.1) {
+    const jumlahAnggota = Math.random() < 0.7 ? 1 : 2;
+
+    for (let i = 0; i < jumlahAnggota; i++) {
+      const jenisKelamin = Math.random() < 0.5 ? "L" : "P";
+
+      // 97% Orang Tua/Mertua, 3% Famili Lain
+      const hubungan =
+        Math.random() < 0.97
+          ? Math.random() < 0.5
+            ? "ORANG TUA"
+            : "MERTUA"
+          : "FAMILI LAIN";
+
+      let umur;
+      if (hubungan === "ORANG TUA" || hubungan === "MERTUA") {
+        // Usia di atas 60 tahun
+        umur = getRandomNumber(60, 85);
+      } else {
+        // Famili lain bisa berbagai usia
+        umur = getRandomNumber(20, 70);
+      }
+
+      const anggota = generateBasicMember(familyAgama, jenisKelamin, umur);
+      anggota.statusHubunganKeluarga = hubungan;
+
+      // Status pernikahan untuk anggota lain
+      if (hubungan === "ORANG TUA" || hubungan === "MERTUA") {
+        anggota.statusPernikahan = Math.random() < 0.7 ? "CERAI MATI" : "KAWIN";
+      } else {
+        anggota.statusPernikahan = getByProbability([
+          { value: "KAWIN", probability: 0.5 },
+          { value: "BELUM KAWIN", probability: 0.3 },
+          { value: "CERAI HIDUP", probability: 0.15 },
+          { value: "CERAI MATI", probability: 0.05 },
+        ]);
+      }
+
+      anggotaLain.push(anggota);
+    }
+  }
+
+  return anggotaLain;
+}
+
+function generateFamily(specificDusun = null) {
   const kk = generateKK();
   const alamat = generateAlamat(specificDusun);
-  const memberCount = getRandomNumber(2, maxMembers);
   const anggota = [];
 
   // Tentukan agama keluarga (mayoritas Islam di Yogyakarta)
   const familyAgama = Math.random() < 0.85 ? "ISLAM" : getRandomElement(agama);
 
-  // Generate kepala keluarga (selalu laki-laki)
-  const kepalaKeluarga = generateFamilyMember(familyAgama, true, "L");
-
-  // Tentukan status pernikahan kepala keluarga
-  const statusKepala =
-    kepalaKeluarga.umur > 25 && Math.random() > 0.3
-      ? "KAWIN"
-      : kepalaKeluarga.umur > 40 && Math.random() > 0.8
-      ? "CERAI HIDUP"
-      : "BELUM KAWIN";
-
-  kepalaKeluarga.statusPernikahan = statusKepala;
-  kepalaKeluarga.statusHubunganKeluarga = "KEPALA KELUARGA";
+  // 1. Generate Kepala Keluarga
+  const kepalaKeluarga = generateKepalaKeluarga(familyAgama);
   anggota.push(kepalaKeluarga);
 
-  // Generate istri jika kepala keluarga kawin
-  if (statusKepala === "KAWIN" && memberCount > 1) {
-    const istri = generateFamilyMember(familyAgama, false, "P", true);
-    istri.statusPernikahan = "KAWIN";
-    istri.statusHubunganKeluarga = "ISTRI";
-    anggota.push(istri);
+  // 2. Generate Pasangan (jika KRT kawin)
+  const pasangan = generatePasangan(kepalaKeluarga, familyAgama);
+  if (pasangan) {
+    anggota.push(pasangan);
   }
 
-  // Generate anggota keluarga lainnya
-  const remainingMembers = memberCount - anggota.length;
-  for (let i = 0; i < remainingMembers; i++) {
-    const member = generateFamilyMember(familyAgama, false);
+  // 3. Generate Anak
+  const anakList = generateAnak(kepalaKeluarga, familyAgama);
+  anggota.push(...anakList);
 
-    // Tentukan hubungan keluarga
-    if (member.umur < 25) {
-      member.statusHubunganKeluarga = "ANAK";
-      member.statusPernikahan =
-        member.umur < 17
-          ? "BELUM KAWIN"
-          : Math.random() > 0.7
-          ? "KAWIN"
-          : "BELUM KAWIN";
-    } else {
-      member.statusHubunganKeluarga = "FAMILI LAIN";
-      member.statusPernikahan =
-        member.umur < 25
-          ? "BELUM KAWIN"
-          : Math.random() > 0.5
-          ? "KAWIN"
-          : Math.random() > 0.7
-          ? "CERAI HIDUP"
-          : "BELUM KAWIN";
-    }
-
-    anggota.push(member);
-  }
+  // 4. Generate Anggota Keluarga Lain (opsional)
+  const anggotaLain = generateAnggotaLain(familyAgama);
+  anggota.push(...anggotaLain);
 
   // Hapus properti umur sebelum return
   anggota.forEach((member) => delete member.umur);
@@ -494,12 +623,33 @@ function getDusunStats(data) {
         anggota: 0,
         rw: new Set(),
         rt: new Set(),
+        krt: { laki: 0, perempuan: 0 },
+        statusPernikahan: {},
+        hubunganKeluarga: {},
       };
     }
     stats[dusun].keluarga.add(row["No KK"]);
     stats[dusun].anggota++;
     stats[dusun].rw.add(row["RW"]);
     stats[dusun].rt.add(row["RT"]);
+
+    // Statistik KRT
+    if (row["Hubungan Keluarga"] === "KEPALA KELUARGA") {
+      if (row["Jenis Kelamin"] === "L") {
+        stats[dusun].krt.laki++;
+      } else {
+        stats[dusun].krt.perempuan++;
+      }
+    }
+
+    // Statistik status pernikahan dan hubungan keluarga
+    const statusNikah = row["Status Pernikahan"];
+    const hubungan = row["Hubungan Keluarga"];
+
+    stats[dusun].statusPernikahan[statusNikah] =
+      (stats[dusun].statusPernikahan[statusNikah] || 0) + 1;
+    stats[dusun].hubunganKeluarga[hubungan] =
+      (stats[dusun].hubunganKeluarga[hubungan] || 0) + 1;
   });
 
   // Convert Sets to counts
@@ -516,17 +666,14 @@ document.getElementById("dataForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
   const familyCount = parseInt(document.getElementById("familyCount").value);
-  const avgMemberCount = parseInt(
-    document.getElementById("avgMemberCount").value
-  );
   const specificDusun = document.getElementById("dusun").value || null;
   const fileName =
     document.getElementById("fileName").value || "data_keluarga_ambarketawang";
 
-  // Generate families
+  // Generate families dengan logika bisnis realistis
   const families = [];
   for (let i = 0; i < familyCount; i++) {
-    families.push(generateFamily(specificDusun, avgMemberCount));
+    families.push(generateFamily(specificDusun));
   }
 
   // Convert to flat structure for Excel
@@ -543,16 +690,27 @@ document.getElementById("dataForm").addEventListener("submit", function (e) {
   // Get statistics
   const stats = getDusunStats(flatData);
   const totalMembers = flatData.length;
+  const totalKRT = Object.values(stats).reduce(
+    (sum, stat) => sum + stat.krt.laki + stat.krt.perempuan,
+    0
+  );
+  const pctKRTLaki = Math.round(
+    (Object.values(stats).reduce((sum, stat) => sum + stat.krt.laki, 0) /
+      totalKRT) *
+      100
+  );
 
   // Create detailed summary
-  let summaryText = `✅ Data berhasil digenerate!\n\n📊 RINGKASAN LENGKAP:\n`;
+  let summaryText = `✅ Data realistis berhasil digenerate!\n\n📊 RINGKASAN LENGKAP:\n`;
   summaryText += `📍 Lokasi: Kelurahan Ambarketawang, Kecamatan Gamping, Kabupaten Sleman, DIY\n\n`;
   summaryText += `📈 STATISTIK UMUM:\n`;
   summaryText += `• Total Keluarga: ${familyCount}\n`;
   summaryText += `• Total Anggota: ${totalMembers}\n`;
   summaryText += `• Rata-rata Anggota per Keluarga: ${
     Math.round((totalMembers / familyCount) * 10) / 10
-  }\n\n`;
+  }\n`;
+  summaryText += `• KRT Laki-laki: ${pctKRTLaki}%\n`;
+  summaryText += `• KRT Perempuan: ${100 - pctKRTLaki}%\n\n`;
 
   summaryText += `🏘️ DISTRIBUSI PER DUSUN:\n`;
   Object.keys(stats).forEach((dusun) => {
